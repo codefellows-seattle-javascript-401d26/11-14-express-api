@@ -55,8 +55,9 @@ router.get('/api/seattlebar/:id', (request, response) => {
   return response.sendStatus(404);
 });
 
-// router.delete('/api/seattlebar/:id', (request, response) => {
-//   barStorage.splice(barStorage.indexOf(request.url.query(request)), 1);
-//   sendStatus(204, `${request.url.query(request)} no longer exists.`, response);
-//   return undefined;
-// });
+router.delete('/api/seattlebar/:id', (request, response) => {
+  if (barStorageByHash[request.params.id]){
+  barStorageById.splice(barStorageById.indexOf(request.url.query(request)), 1);
+  // sendStatus(204, `${request.url.query(request)} no longer exists.`, response);
+  return respond.sendStatus(204);
+});

@@ -1,11 +1,11 @@
 'use strict';
 
 const express = require('express');
+const app = express();
+
 const logger = require('./logger');
 
 const seattleBarRouter = require('../routes/seattle-bars-router');
-
-const app = express();
 
 //-------------------------------------------------
 
