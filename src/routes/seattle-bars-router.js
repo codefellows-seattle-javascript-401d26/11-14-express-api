@@ -2,6 +2,8 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const HttpError = require('http-errors');
+
 
 const SeattleBars = require('../model/seattlebar');
 const logger = require('../lib/logger');
@@ -13,29 +15,26 @@ const router = module.exports = new express.Router();
 const barStorageById = [];
 const barStorageByHash = {};
 
-router.post('/api/seattlebar', jsonParser, (request, response) => {
-  logger.log(logger.INFO, 'Processing a POST request on /api/seattlebar');
+router.post('/api/seattlebar', jsonParser, (request, response, next) => {
   //----------------------------------------------------------------------------------
   // REQUEST VALIDATION
   //----------------------------------------------------------------------------------
   if (!request.body) {
-    logger.log(logger.INFO, 'Resonding with a 400 status code');
-    return response.sendStatus(400);
+    return next(new HttpError(400, 'body is required'));
   }
   if (!request.body.title) {
-    logger.log(logger.INFO, 'Resonding with a 400 status code');
-    return response.sendStatus(400);
+    return next(new HttpError(400, 'title is required'));
   }
 
   if (!request.body.content) {
-    logger.log(logger.INFO, 'Resonding with a 400 status code');
-    return response.sendStatus(400);
+    return next(new HttpError(400, 'content is required'));
   }
   //----------------------------------------------------------------------------------
   // NOTE CREATION
   //----------------------------------------------------------------------------------
   const seattleBars = new SeattleBars(request.body.title, request.body.content);
   barStorageById.push(seattleBars.id);
+  barStorageByHash[seattleBars.id] = seattleBars;
 
   logger.log(logger.INFO, 'Responding with a 200 status code and a json object');
   logger.log(logger.INFO, barStorageById);
@@ -43,23 +42,43 @@ router.post('/api/seattlebar', jsonParser, (request, response) => {
   return response.json(seattleBars);
 });
 
-router.get('/api/seattlebar/:id', (request, response) => {
-  logger.log(logger.INFO, 'Processing a GET request on /api/seattlebar');
+router.get('/api/seattlebar/:id', (request, response, next) => {
   logger.log(logger.INFO, `Trying to get an object with id ${request.params.id}`);
 
   if (barStorageByHash[request.params.id]) {
     logger.log(logger.INFO, 'Responding with a 200 status code and json data');
     return response.json(barStorageByHash[request.params.id]);
   }
-  logger.log(logger.INFO, 'Responding with a 404 status code. The seattle bar was not found');
-  return response.sendStatus(404);
+  return next(new HttpError(404, 'The seattle bar was not found'));
 });
 
-router.delete('/api/seattlebar/:id', (request, response) => {
+router.delete('/api/seattlebar/:id', (request, response, next) => {
+  logger.log(logger.INFO, 'The bar has been found to be deleted');
+
   if (barStorageByHash[request.params.id]) {
-    barStorageById.splice(barStorageById.indexOf(request.url.query(request)), 1);
-    // sendStatus(204, `${request.url.query(request)} no longer exists.`, response);
+    logger.log(logger.INFO, 'The correct bar has been found to delete');
+    const barToRemove = barStorageById.indexOf(request.params.id);
+    barStorageById.splice(barToRemove, 1);
+    delete barStorageByHash[request.params.id];
     return response.sendStatus(204);
   }
-  return undefined;
+  return next(new HttpError(404, 'The seattle bar has not been found'));
+});
+
+router.put('/api/seattlebar/id:', jsonParser, (request, response, next) => {
+  logger.log(logger.INFO(`Trying to update a bar with id ${request.params.id}`));
+
+  if (barStorageByHash[request.params.id]) {
+    logger.log(logger.INFO, 'We found the bar to update');
+    if (request.body.title) {
+      barStorageByHash[request.params.id].title = request.body.title;
+    }
+    if (request.body.content) {
+      barStorageByHash[request.params.id].content = request.body.content;
+    }
+    return response.json(barStorageByHash[request.params.id]);
+    // return response.sendStatus(204);
+    // }
+  }
+  return next(new HttpError(404, 'The Seattle bar has not been found'));
 });

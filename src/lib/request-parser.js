@@ -2,7 +2,7 @@
 
 const url = require('url');
 const queryString = require('querystring');
-const logger = require('./logger');
+const logger = require('./logger-middleware');
 
 const requestParser = module.exports = {};
 
