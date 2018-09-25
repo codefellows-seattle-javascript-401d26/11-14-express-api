@@ -23,8 +23,6 @@ describe('/api/seattlebar', () => {
         expect(response.status).toEqual(200);
         expect(response.body.content).toEqual('Whiskey bar');
         expect(response.body.title).toEqual('Canon');
-
-        expect(response.body.location).toBeTruthy();
         expect(response.body.id).toBeTruthy();
       });
   });
@@ -41,7 +39,7 @@ describe('/api/seattlebar', () => {
   });
 
   test('should respond 200, and a json seattlebar if there is a matching id', () => {
-    const orginalRequest = {
+    const originalRequest = {
       title: faker.lorem.words(5),
       content: faker.lorem.words(5),
     };
@@ -54,7 +52,7 @@ describe('/api/seattlebar', () => {
       })
       .then((getResponse) => {
         expect(getResponse.status).toEqual(200);
-        expect(getResponse.body.id).toEqual(orignalRequest.id);
+        expect(getResponse.body.id).toEqual(originalRequest.id);
         expect(getResponse.body.title).toEqual(originalRequest.title);
       });
   });

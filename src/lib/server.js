@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+
 const app = express();
 
 const logger = require('./logger');
@@ -15,7 +16,6 @@ app.all('*', (request, response) => {
   logger.log(logger.INFO, 'Returning a 404 from a catch/all default route/');
   return response.sendStatus(404);
 });
-
 const server = module.exports = {};
 let internalServer = null;
 
@@ -24,7 +24,6 @@ server.start = () => {
     logger.log(logger.INFO, `Server is on at PORT: ${process.env.PORT}`);
   });
 };
-
 server.stop = () => {
   internalServer.close(() => {
     logger.log(logger.INFO, 'The server is OFF.');
