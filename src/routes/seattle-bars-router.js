@@ -65,8 +65,8 @@ router.delete('/api/seattlebar/:id', (request, response, next) => {
   return next(new HttpError(404, 'The seattle bar has not been found'));
 });
 
-router.put('/api/seattlebar/id:', jsonParser, (request, response, next) => {
-  logger.log(logger.INFO(`Trying to update a bar with id ${request.params.id}`));
+router.put('/api/seattlebar/:id', jsonParser, (request, response, next) => {
+  logger.log(logger.INFO, `Trying to update a bar with id ${request.params.id}`);
 
   if (barStorageByHash[request.params.id]) {
     logger.log(logger.INFO, 'We found the bar to update');
@@ -77,8 +77,6 @@ router.put('/api/seattlebar/id:', jsonParser, (request, response, next) => {
       barStorageByHash[request.params.id].content = request.body.content;
     }
     return response.json(barStorageByHash[request.params.id]);
-    // return response.sendStatus(204);
-    // }
   }
   return next(new HttpError(404, 'The Seattle bar has not been found'));
 });
