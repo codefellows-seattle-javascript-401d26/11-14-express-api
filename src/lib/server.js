@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 const logger = require('./logger');
 const loggerMiddleware = require('../lib/logger-middleware');
 const errorMiddleware = require('../lib/error-middleware');
@@ -10,6 +11,7 @@ const seattleBarRouter = require('../routes/seattle-bars-router');
 const app = express();
 //-------------------------------------------------
 
+app.use(cors());
 app.use(loggerMiddleware);
 
 app.use(seattleBarRouter);

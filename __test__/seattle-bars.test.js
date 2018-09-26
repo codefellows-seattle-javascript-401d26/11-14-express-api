@@ -6,7 +6,10 @@ const faker = require('faker');
 
 const superagent = require('superagent');
 
+// const cors = require('cors');
+
 const server = require('../src/lib/server');
+
 
 const API_URL = `http://localhost:${process.env.PORT}/api/seattlebar`;
 

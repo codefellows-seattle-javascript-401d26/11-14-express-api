@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const HttpError = require('http-errors');
 
@@ -14,6 +15,8 @@ const router = module.exports = new express.Router();
 
 const barStorageById = [];
 const barStorageByHash = {};
+
+router.use(cors());
 
 router.post('/api/seattlebar', jsonParser, (request, response, next) => {
   //----------------------------------------------------------------------------------
@@ -42,8 +45,9 @@ router.post('/api/seattlebar', jsonParser, (request, response, next) => {
   return response.json(seattleBars);
 });
 
-router.get('/api/seattlebar/:id', (request, response, next) => {
+router.get('/api/seattlebar/:id', (request, response, next) => { // I added cors here, but was throwing error
   logger.log(logger.INFO, `Trying to get an object with id ${request.params.id}`);
+  // response.json({ msg: 'This is CORS-enabled for a single route' });
 
   if (barStorageByHash[request.params.id]) {
     logger.log(logger.INFO, 'Responding with a 200 status code and json data');
