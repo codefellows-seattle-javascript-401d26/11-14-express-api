@@ -1,13 +1,17 @@
 # 11: Express - app.js
-##### simple restful HTTP server built with express
+##### restful HTTP server built with express
 [![Build Status](https://travis-ci.com/bgwest/11-14-express-api.svg?branch=master)](https://travis-ci.com/bgwest/11-14-express-api)
-## Features
+## Current Features
 
+These methods currently exist for creating, changing, deleting, and getting user data. Updates to this API will continue to stream in as this project moves forward. Currently I am part 12 of 14. 
+* PUT
+* DELETE
+* POST
+* GET
 
-* functional HTTP server with express
-* create a object constructor that creates a simple resource with at least 3 properties
-* persist your API data using either an array or an array and an object
-
+Utilizes:
+* express
+* middleware e.g. body-parser
 
 ## How To
 
@@ -124,13 +128,44 @@ info: 404 - User was not found.
 
 ```
 
+[x] PUT (update) user
+
+```
+
+[0]Benjamins-MacBook-Pro:Repositories bwest$ 
+[0]Benjamins-MacBook-Pro:Repositories bwest$ echo '{"username":"ello"}' | http PUT :4000/login/0a390800-c159-11e8-b994-67f2fbd1d839
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 140
+Content-Type: application/json; charset=utf-8
+Date: Wed, 26 Sep 2018 06:54:59 GMT
+ETag: W/"8c-aiPTqI4hIIvWjj2c6jUB1A3fRNk"
+X-Powered-By: Express
+
+{
+    "id": "0a390800-c159-11e8-b994-67f2fbd1d839",
+    "timestamp": "2018-09-26T06:54:40.257Z",
+    "title": "Sysadmin / Junior Developer",
+    "username": "ello"
+}
+
+[0]Benjamins-MacBook-Pro:Repositories bwest$
+
+```
+
 ### Tests Performed with Jest
 
-* test 1: create user - should respond 200 and return a new user in json.
+* test 1: create user - should respond 200 and return a new user in json
 
-* test 2: create user incorrectly - should respond 400 if there is no job role title.
+* test 2: create user incorrectly - should respond 400 if there is no job role title
 
 * test 3: create random user - should respond with 200 status code and a json note if there is a matching id
+
+* test4: user removal - should respond 204 if a user is removed
+
+* test5: delete request - should respond 404 if user does not exist
+
+* test6: username update - if successful, should respond 204
 
 
 ### Installing
@@ -144,7 +179,7 @@ To use this in your code:
 ## Built With
 
 * es6
-* NodeJS (fs, dotenv, express)
+* NodeJS (fs, dotenv, express, http-errors)
 * body-parser
 * winston
 * Eslint
