@@ -1,13 +1,26 @@
 'use strict';
 
-const uuid = require('uuid/v1');
+const mongoose = require('mongoose');
 
-class SeattleBars {
-  constructor(title, content) {
-    this.id = uuid();
-    this.title = title;
-    this.content = content;
-  }
-}
+// class SeattleBars {
+//   constructor(title, content) {
+//     this.id = uuid();
+//     this.title = title;
+//     this.content = content;
+//   }
+// }
 
-module.exports = SeattleBars;
+const barSchema = mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  content: {
+    type: String,
+    required: true,
+    minLength: 5,
+  },
+});
+
+module.exports = mongoose.model('seattlebar', barSchema);
