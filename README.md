@@ -1,6 +1,7 @@
 ![cf](http://i.imgur.com/7v5ASc8.png) Restful API 
 ====
-[![Build Status](https://travis-ci.com/ashabrai/11-14-express-api.svg?branch=master)](https://travis-ci.com/ashabrai/11-14-express-api)
+[![Build Status](https://travis-ci.com/ashabrai/11-14-express-api.svg?branch=master)]
+(https://travis-ci.com/ashabrai/11-14-express-api)
 
 This project is to build a restful api with GET, PUT, POST, DELETE data.
 Along with http-error routes to respond back to the client. 
