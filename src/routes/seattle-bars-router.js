@@ -5,15 +5,15 @@ const bodyParser = require('body-parser');
 const HttpError = require('http-errors');
 
 
-const SeattleBars = require('../model/seattlebar');
+const SeattleBar = require('../model/seattlebar');
 const logger = require('../lib/logger');
 
 const jsonParser = bodyParser.json();
 const router = module.exports = new express.Router();
 
 
-router.post('/api/seattlebar', jsonParser, (request, response, next) => {
-  return new SeattleBars(request.body).save()
+router.post('/api/seattleBars', jsonParser, (request, response, next) => {
+  return new SeattleBar(request.body).save()
     .then((savedSeattleBars) => {
       logger.log(logger.INFO, 'Responding with 200 status');
       return response.json(savedSeattleBars);
@@ -21,55 +21,45 @@ router.post('/api/seattlebar', jsonParser, (request, response, next) => {
     .catch(next);
 });
 
-router.get('/api/seattlebar/:id', (request, response, next) => { // I added cors here, but was throwing error
-  return SeattleBars.findById(request.params.id)
-    .then((seattlebar) => {
-      if (seattlebar) {
+router.get('/api/seattleBars/:id', (request, response, next) => { // I added cors here, but was throwing error
+  return SeattleBar.findById(request.params.id)
+    .then((seattleBar) => {
+      if (seattleBar) {
         logger.log(logger.INFO, 'Responding with a 200 status and a bar');
-        return response.json(seattlebar);
+        return response.json(seattleBar);
       }
       logger.log(logger.INFO, 'Responding with a 404 status code and seattle bar not found');
       return next(new HttpError(404, 'seattle bar not found'));
     })
-    .catch(next); // by default a catch gets a error as a first argument. Express
-  // knows to immdieatly calls the error-logger
+    .catch(next);
 });
-
-// router.delete('/api/seattlebar/:id', (request, response, next) => {
-//   return SeattleBars.findByIdAndDelete(request.params.id)
-//     .then((seattlebars) => {
-//       if (seattlebars) {
-//         logger.log(logger.INFO, 'Correct bar has been found to delete');
-//         return response.sendStatus(204);
-//       }
-//       return next(new HttpError(404, 'The seattle bar has not been found'));
-//     });
-
-//   const barToRemove = barStorageById.indexOf(request.params.id);
-//   barStorageById.splice(barToRemove, 1);
-//   delete barStorageByHash[request.params.id];
-//   return response.sendStatus(204);
-// }
-
-
-// router.put('/api/seattlebar/:id', jsonParser, (request, response, next) => {
-//   return SeattleBars.findByIdAndUpdate(request.params.id)
-//     .then((seattlebars) => {
-//       if (seattlebars) {
-//         logger.log(logger.INFO, 'We found the bar to update');
-//         logger.log(logger.INFO, seattlebars);
-//       }
-//     });
 //
-//   if (barStorageByHash[request.params.id]) {
-//     logger.log(logger.INFO, 'We found the bar to update');
-//     if (request.body.title) {
-//       barStorageByHash[request.params.id].title = request.body.title;
-//     }
-//     if (request.body.content) {
-//       barStorageByHash[request.params.id].content = request.body.content;
-//     }
-//     return response.json(barStorageByHash[request.params.id]);
-//   }
-//   return next(new HttpError(404, 'The Seattle bar has not been found'));
+// router.delete('/api/seattleBars/:id', (request, response, next) => {
+//   return SeattleBar.findByIdRemove(request.params.id)
+//     .then((seattleBar) => {
+//       if (seattleBar) {
+//         logger.log(logger.INFO, 'Bar deleted');
+//         return response.json(204, seattleBar);
+//       }
+//       logger.log(logger.INFO, 'Responding with 404 status bar not found');
+//       return next(new HttpError(404, 'Bar has not been found'));
+//     })
+//     .catch(next);
+// });
+//
+// router.put('/api/seattleBars/:id', jsonParser, (request, response, next) => {
+//   const updateOptions = {
+//     runValidators: true,
+//     new: true,
+//   };
+//   return SeattleBar.findByIdAndUpdate(request.params.id, request.body, updateOptions)
+//     .then((updatedBar) => {
+//       if (updatedBar) {
+//         logger.log(logger.INFO, 'Responding with 200 status update bar');
+//         return response(updatedBar);
+//       }
+//       logger.log(logger.INFO, 'Responding with 404 status bar not found');
+//       return next(new HttpError(404, 'Bar has not been found'));
+//     })
+//     .catch(error => next(error));
 // });

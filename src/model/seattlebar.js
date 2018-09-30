@@ -2,15 +2,11 @@
 
 const mongoose = require('mongoose');
 
-// class SeattleBars {
-//   constructor(title, content) {
-//     this.id = uuid();
-//     this.title = title;
-//     this.content = content;
-//   }
-// }
-
 const barSchema = mongoose.Schema({
+  timestamp: {
+    type: Date,
+    default: () => new Date(),
+  },
   title: {
     type: String,
     required: true,
@@ -23,4 +19,4 @@ const barSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('seattlebar', barSchema);
+module.exports = mongoose.model('seattleBar', barSchema);

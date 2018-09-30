@@ -12,13 +12,14 @@ const server = require('../src/lib/server');
 const seattleBarMock = require('./lib/seattlebar-mock');
 
 
-const API_URL = `http://localhost:${process.env.PORT}/api/seattlebar`;
+const API_URL = `http://localhost:${process.env.PORT}/api/seattleBar`;
 
-describe('/api/seattlebar', () => {
+describe('/api/seattleBar', () => {
   beforeAll(server.start);
   afterAll(server.stop);
   beforeEach(seattleBarMock.pCreateSeattleBarMock);
 
+  // POST
   test('should respond with 200 status code and a new json note', () => {
     const originalRequest = {
       title: faker.lorem.words(3),
@@ -31,24 +32,24 @@ describe('/api/seattlebar', () => {
         expect(response.status).toEqual(200);
         expect(response.body.content).toEqual(originalRequest.content);
         expect(response.body.title).toEqual(originalRequest.title);
-        // expect(response.body._id.toString()).toBeTruthy();
+        expect(response.body._id.toString()).toBeTruthy();
+        expect(response.body.timestamp).toBeTruthy();
+      });
+  });
+  // POST
+  test('should respond with 400 status code if there is no content', () => {
+    return superagent.post(API_URL)
+      .set('Content-Type', 'application/json')
+      .send({
+        content: 'smith tower',
+      })
+      .then(Promise.reject)
+      .catch((response) => {
+        expect(response.status).toEqual(400);
       });
   });
 
-  // test('should respond with 400 status code if there is no title', () => {
-  //   return superagent.post(API_URL)
-  //     .set('Content-Type', 'application/json')
-  //     .send({
-  //       content: 'Whiskey bar',
-  //     })
-  //     .then(()=>{
-  //     (Promise.reject
-  //     .catch((response) => {
-  //       expect(response.status).toEqual(400);
-  //     });
-  // });
-  // }
-
+  // GET
   test('should respond 200, and a json seattlebar if there is a matching id', () => {
     let savedSeattleBarMock = null;
     return seattleBarMock.pCreateSeattleBarMock()
@@ -58,32 +59,33 @@ describe('/api/seattlebar', () => {
       })
       .then((getResponse) => {
         expect(getResponse.status).toEqual(200);
-
-        // expect(getResponse._id.toString()).toEqual(savedSeattleBarMock._id.toString());
-        expect(getResponse.body.content).toEqual(savedSeattleBarMock.content);
+        expect(getResponse.body.timestamp).toBeTruthy();
+        expect(getResponse.body._id.toString()).toEqual(savedSeattleBarMock._id.toString());
         expect(getResponse.body.title).toEqual(savedSeattleBarMock.title);
+      });
+  });
+  // get
+  test('should respond with 404 for no bar found', () => {
+    return superagent.put(`http://localhost:${process.env.PORT}/api/seattleBar/252525523`)
+      .then(Promise.reject)
+      .catch((response) => {
+        expect(response.status).toEqual(404);
       });
   });
 });
 
-
+//   // DELETE
 //   test('should respond with 204 if we remove bar', () => {
-//     const originalRequest = {
-//       title: faker.lorem.words(5),
-//       content: faker.lorem.words(5),
-//     };
-//     return superagent.post(API_URL)
-//       .set('Content-Type', 'application/json')
-//       .send(originalRequest)
-//       .then((postResponse) => {
-//         originalRequest.id = postResponse.body.id;
-//         return superagent.delete(`${API_URL}/${postResponse.body.id}`);
+//     return seattleBarMock.pCreateSeattleBarMock()
+//       .then((createdSeattleBarMock) => {
+//         return superagent.delete(`${API_URL}/${createdSeattleBarMock._id}`);
 //       })
 //       .then((getResponse) => {
 //         expect(getResponse.status).toEqual(204);
 //       });
 //   });
 //
+//   // DELETE
 //   test('should respond with 404 if there is no bar to remove', () => {
 //     return superagent.delete(`${API_URL}/invalidId-sun-liquor`)
 //       .then(Promise.reject)
@@ -92,27 +94,58 @@ describe('/api/seattlebar', () => {
 //       });
 //   });
 //
-//   test('should respond with 204 if we updated a bar', () => {
-//     const originalRequest = {
-//       title: faker.lorem.words(5),
-//       content: faker.lorem.words(5),
-//     };
-//     return superagent.post(API_URL)
-//       .set('Content-Type', 'application/json')
-//       .send(originalRequest)
-//       .then((postResponse) => {
-//         originalRequest.id = postResponse.body.id;
-//         return superagent.put(`${API_URL}/${postResponse.body.id}`)
+//   // put
+//   test('should respond with a 400 when body is not sent with request', () => {
+//     return seattleBarMock.pCreateSeattleBarMock()
+//       .then((createSeattleBarMock) => {
+//         return superagent.put(`${API_URL}/${createSeattleBarMock._id}`)
+//           .set('Content-type', 'application/json')
+//           .send({})
+//           .then(Promise.reject)
+//           .catch((response) => {
+//             expect(response.status).toEqual(undefined);
+//           });
+//       });
+//   });
+//
+//   // PUT
+//   test('should respond with 200 if we updated a bar content', () => {
+//     let updateBar = null;
+//     return seattleBarMock.pCreateSeattleBarMock()
+//       .then((createSeattleBarMock) => {
+//         updateBar = createSeattleBarMock;
+//         return superagent.put(`${API_URL}/${createSeattleBarMock._id}`)
 //           .send({
-//             title: 'Canon',
+//             content: 'mai thai',
 //           });
 //       })
 //       .then((putResponse) => {
 //         expect(putResponse.status).toEqual(200);
-//         expect(putResponse.body.id).toEqual(originalRequest.id);
-//
-//         expect(putResponse.body.title).toEqual('Canon');
-//         expect(putResponse.body.content).toEqual(originalRequest.content);
+//         expect(putResponse.body.content).toEqual('mai thai');
+//         expect(putResponse.body.title).toEqual(updateBar.title);
 //       });
 //   });
-// });
+//   test('should 200 respond with an updated title', () => {
+//     let updateBar = null;
+//     return seattleBarMock.pCreateSeattleBarMock()
+//       .then((createSeattleBarMock) => {
+//         updateBar = createSeattleBarMock;
+//         return superagent.put(`${API_URL}/${createSeattleBarMock._id}`)
+//           .send({
+//             title: 'Stateside',
+//           });
+//       })
+//       .then((putResponse) => {
+//         expect(putResponse.status).toEqual(200);
+//         expect(putResponse.body.content).toEqual(updateBar.content);
+//         expect(putResponse.body.title).toEqual('Stateside');
+//       });
+//   });
+//   // PUT
+//
+//   test('should respond with 404, if there is not a bar to update', () => {
+//     return superagent.put(`http://localhost:${process.env.PORT}/api/seattleBar/09019384`)
+//       .then(Promise.reject)
+//       .catch((response) => {
+//         expect(response.status).toEqual(404);
+//       });
