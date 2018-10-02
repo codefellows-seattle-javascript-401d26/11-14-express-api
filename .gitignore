@@ -179,7 +179,8 @@ fabric.properties
 *.iml
 modules.xml
 .idea/misc.xml
-.db/
+db/
+testdb/
 *.ipr
 
 
