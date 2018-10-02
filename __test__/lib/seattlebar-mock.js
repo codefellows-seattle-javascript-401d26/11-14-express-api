@@ -7,11 +7,11 @@ const seattleBarMock = module.exports = {};
 
 seattleBarMock.pCreateSeattleBarMock = () => {
   return new SeattleBars({
-    title: faker.lorem.words(3),
+    title: faker.lorem.words(10),
     content: faker.lorem.words(10),
   }).save();
 };
 
-seattleBarMock.pCreateSeattleBarMock = () => {
+seattleBarMock.pCleanSeattleBarMock = () => {
   return SeattleBars.remove({});
 };
