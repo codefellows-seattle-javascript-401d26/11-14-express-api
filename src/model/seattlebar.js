@@ -15,8 +15,8 @@ const barSchema = mongoose.Schema({
   content: {
     type: String,
     required: true,
-    minLength: 5,
   },
 });
+
 
 module.exports = mongoose.model('seattleBar', barSchema);

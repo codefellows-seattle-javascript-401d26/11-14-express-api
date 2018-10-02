@@ -1,5 +1,6 @@
 'use strict';
 
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const HttpError = require('http-errors');
@@ -12,16 +13,16 @@ const jsonParser = bodyParser.json();
 const router = module.exports = new express.Router();
 
 
-router.post('/api/seattleBars', jsonParser, (request, response, next) => {
+router.post('/api/seattlebar', jsonParser, (request, response, next) => {
   return new SeattleBar(request.body).save()
-    .then((savedSeattleBars) => {
+    .then((savedSeattleBar) => {
       logger.log(logger.INFO, 'Responding with 200 status');
-      return response.json(savedSeattleBars);
+      return response.json(savedSeattleBar);
     })
     .catch(next);
 });
 
-router.get('/api/seattleBars/:id', (request, response, next) => { // I added cors here, but was throwing error
+router.get('/api/seattlebar/:id', (request, response, next) => {
   return SeattleBar.findById(request.params.id)
     .then((seattleBar) => {
       if (seattleBar) {
@@ -33,33 +34,43 @@ router.get('/api/seattleBars/:id', (request, response, next) => { // I added cor
     })
     .catch(next);
 });
-//
-// router.delete('/api/seattleBars/:id', (request, response, next) => {
-//   return SeattleBar.findByIdRemove(request.params.id)
+
+router.delete('/api/seattlebar/:id', (request, response, next) => {
+  return SeattleBar.findByIdAndDelete(request.params.id)
+    .then((seattleBar) => {
+      if (seattleBar) {
+        logger.log(logger.INFO, 'Bar deleted');
+        return response.json(204, seattleBar);
+      }
+      logger.log(logger.INFO, 'Responding with 404 status bar not found');
+      return next(new HttpError(404, 'Bar has not been found'));
+    })
+    .catch(next);
+});
+
+// router.put('/api/seattlebar/:id', jsonParser, (request, response, next) => {
+//   return SeattleBar.findById(request.params.id)
 //     .then((seattleBar) => {
-//       if (seattleBar) {
-//         logger.log(logger.INFO, 'Bar deleted');
-//         return response.json(204, seattleBar);
+//       if (!request.content) {
+//         throw HttpError(400, 'content is required');
 //       }
-//       logger.log(logger.INFO, 'Responding with 404 status bar not found');
-//       return next(new HttpError(404, 'Bar has not been found'));
+//       if (!seattleBar) {
+//         throw HttpError(400, 'not bar found');
+//       }
+//       if (request.body.title) {
+//         seattleBar.set({
+//           title: `${request.body.title}`,
+//         });
+//       }
+//       if (request.body.content) {
+//         seattleBar.set({
+//           content: `${request.body.content}`,
+//         });
+//       }
+//       logger.log(logger.INFO, 'Responding with 200 status update bar');
+//       return seattleBar.save()
+//         .then(updatedSeattleBar => response.json(updatedSeattleBar))
+//         .catch(next);
 //     })
 //     .catch(next);
-// });
-//
-// router.put('/api/seattleBars/:id', jsonParser, (request, response, next) => {
-//   const updateOptions = {
-//     runValidators: true,
-//     new: true,
-//   };
-//   return SeattleBar.findByIdAndUpdate(request.params.id, request.body, updateOptions)
-//     .then((updatedBar) => {
-//       if (updatedBar) {
-//         logger.log(logger.INFO, 'Responding with 200 status update bar');
-//         return response(updatedBar);
-//       }
-//       logger.log(logger.INFO, 'Responding with 404 status bar not found');
-//       return next(new HttpError(404, 'Bar has not been found'));
-//     })
-//     .catch(error => next(error));
 // });

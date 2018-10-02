@@ -15,10 +15,10 @@ module.exports = (error, request, response, next) => { //eslint-disable-line
 
   const errorMessage = error.message.toLowerCase();
 
-  if (errorMessage.includes('object id failed')) {
-    logger.log(logger.ERROR, 'Responding with a 400 code');
+  if (errorMessage.includes('cast to objectid failed')) {
+    logger.log(logger.ERROR, 'Responding with a 404 code');
     logger.log(logger.ERROR, 'could not validate id');
-    return response.sendStatus(400);
+    return response.sendStatus(404);
   }
   if (errorMessage.includes('validation failed')) {
     logger.log(logger.ERROR, 'Responding with a 400 code');
