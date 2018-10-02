@@ -1,64 +1,48 @@
-![cf](https://i.imgur.com/7v5ASc8.png) 11: Express
-======
+![cf](http://i.imgur.com/7v5ASc8.png) Restful API 
+====
+[![Build Status](https://travis-ci.com/ashabrai/11-14-express-api.svg?branch=master)]
+(https://travis-ci.com/ashabrai/11-14-express-api)
 
-### Submission Instructions
- * Work in a fork of this repository
- * Work in a branch on your fork
- * Create a PR to your master from your working branch.
- * Ensure that your repository/branch is connected to travis-ci.com
- * Heroku and Travis should pick you up and deploy
- * Submit on canvas:
-   * a question and observation
-   * how long you spent
-   * link to your pull request
-   * link to your build at travis-ci URL
- 
- ## Configuration 
- Configure the root of your repository with the following files and directories. Thoughfully name and organize any aditional configuration or module files.
- * **README.md** - contains documentation
- * **.env** - contains env variables (should be git ignored)
- * **.gitignore** - contains a [robust](http://gitignore.io) `.gitignore` file 
- * **.eslintrc** - contains the course linter configuratoin
- * **.eslintignore** - contains the course linter ignore configuration
- * **.travis.yml** - contains the course linter ignore configuration
- * **package.json** - contains npm package config
-   * create a `lint` script for running eslint (eslint **/*.js)
-   * create a `test` script for running tests
-   * create a `start` script for running your server
- * **index.js** - the entry point for your application
- * **src/** - contains your core application files and folders
- * **src/app.js** - (or main.js) contains your core application bootstrap
- * **src/lib/** - contains module definitions
- * **\_\_test\_\_/** - contains unit tests
+This project is to build a restful api with GET, PUT, POST, DELETE data.
+Along with http-error routes to respond back to the client. 
 
-## Learning Objectives  
-* students will be able to create a single resource API using the express framework
+## Getting Started
+   * Instructions of what has been done will allow you to get the code running on your 
+   local machine. 
 
-## Requirements
 
-#### Feature Tasks
-* create an HTTP server using `express`
-* create a object constructor that creates a _simple resource_ with at least 3 properties
-  * it can **not** have the same properties as the in-class sample code (other than the `id`)
-  * a unique `id` property should be included *(node-uuid)*
-  * include two additional properties of your choice
-* persist your API data using either an array or an array and an object as seen in class. 
+## Requirements  
+   * You need to have NodeJS installed, so if you don't just search online for nodejs and download it.
+    
+#### Installing 
+   * Clone the repo into your local machine -git clone -directory name here- 
+   * Next install project files - npm install 
+   * You will need install superagent - npm install superagent
+   * A few new files will be added, error-middeware and logger-middleware.js. If an error occurs it will
+   automatically reach and respond with the error code listed in the error-middleware file. The logger-middeware 
+   will show you updates of whats happening in your code. You can see the log when you are doing testing 
+   and its a new resource to see where errors may have a occurred. 
+   * In your __test__ file you will be adding <nameoffolder>-mock.js and a test.env.js file as well. Your are going 
+   to need to add your mongodb and port information for your server to run. 
 
-#### Server Endpoints
-* **`/api/vi/resource-name`**
-* `POST` request
- * pass data as stringifed JSON in the body of a **POST** request to create a new resource
-* `GET` request
- * pass `/:id` as a route parameter to **GET** a specific resource (as JSON)
-* `DELETE` request
- * pass `/:id` as a route parameter to **DELETE** a specific resource (as JSON)
- * this should return a 204 status code with no content in the body
+#### Testing  
+   * Test for valid post request
+   * Test for invalid post request
+   * Test for delete request 
+   * Test for delete request for path not found
+   * Test for post, path id found 
+   * Test for post, path not found
+   * Test method with query parameter
+   * Don't forget to add "services:mongodb" into your .travis file, or else your test won't pass.
+   * You will need to have 2 terminal windows open when you are ready to test.
+   * When you are ready to test type -npm run test in one
+   * And the other one run -npm run dbOn
 
-#### Tests
-* write a test to ensure that your api returns a status code of 404 for routes that have not been registered
-* write tests to ensure the `/api/simple-resource-name` endpoint responds as described for each condition below:
- * `GET`: test 404, it should respond with 'not found' for valid requests made with an id that was not found
- * `GET`: test 400, it should respond with 'bad request' if no id was provided in the request
- * `GET`: test 200, it should contain a response body for a request made with a valid id
- * `POST`: test 400, it should respond with 'bad request' if no request body was provided or the body was invalid
- * `POST`: test 200, it should respond with the body content for a post request with a valid body
+####  Authors
+* Brai Frauen 
+
+#### License 
+This project is licensed under the MIT License - see the LICENSE.md file for details
+
+#### Version
+* 1.0.3
